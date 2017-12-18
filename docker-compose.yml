@@ -1,0 +1,15 @@
+version: "2"
+services:
+  web:
+    build: .
+    image: studyup
+    command: npm start
+    volumes:
+      - .:/app/
+      - /app/node_modules
+
+    ports:
+    - "3000:3000"
+
+
+
