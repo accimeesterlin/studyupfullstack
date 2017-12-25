@@ -24,3 +24,11 @@ export const login = (existing_user) => {
     }
 };
 
+
+
+export const authenticate = (isAuthenticated) => {
+    return{
+        type:"SET_AUTHENTICATION",
+        isAuthenticated
+    }
+};

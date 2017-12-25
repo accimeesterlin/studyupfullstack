@@ -4,8 +4,23 @@ const userReducer = (state = {isAuthenticated: false}, action) => {
             return {
                 ...state,
                 msg: action.payload.data,
-                isAuthenticated:true,
+                isAuthenticated: true,
                 error: false
+            };
+
+        case "SIGN_IN_FULFILLED":
+            return {
+                ...state,
+                isAuthenticated: true,
+                msg: action.payload.data,
+                error: false
+            };
+
+
+        case "SET_AUTHENTICATION":
+            return {
+                ...state,
+                isAuthenticated: !action.isAuthenticated,
             };
 
         case "SIGN_UP_REJECTED":
@@ -16,13 +31,13 @@ const userReducer = (state = {isAuthenticated: false}, action) => {
                 error: true
             };
 
-        case "SIGN_IN_FULFILLED":
-            return{
+        case "SIGN_IN_REJECTED":
+            return {
                 ...state,
-                isAuthenticated:true,
-                error:false
+                msg: action.payload.response.data,
+                isAuthenticated: false,
+                error: true
             };
-
 
 
         default:

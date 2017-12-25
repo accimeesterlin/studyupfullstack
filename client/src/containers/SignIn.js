@@ -1,15 +1,16 @@
 import React from 'react';
 import {Link, Redirect} from 'react-router-dom';
-import {login} from '../action/actions';
+import {login, authenticate} from '../action/actions';
 import {connect} from 'react-redux';
+
 
 import {
     Button,
     Form,
     Input,
     Message,
-    Select,
 } from 'semantic-ui-react';
+
 
 class SignIn extends React.Component {
 
@@ -17,6 +18,10 @@ class SignIn extends React.Component {
         super();
 
         this.state = {};
+    }
+
+    componentWillMount() {
+
     }
 
 
@@ -27,7 +32,6 @@ class SignIn extends React.Component {
     };
 
     sendData = () => {
-        console.log("State: ", this.state);
         this.props.dispatch(login(this.state));
     };
 
@@ -37,8 +41,6 @@ class SignIn extends React.Component {
         return (
             <div>
                 <Form error={this.props.registration.error}>
-
-
                     <Form.Group>
                         <Form.Field
                             control={Input}
