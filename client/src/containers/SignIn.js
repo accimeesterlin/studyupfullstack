@@ -1,7 +1,8 @@
 import React from 'react';
-import {Link, Redirect} from 'react-router-dom';
-import {login, authenticate} from '../action/actions';
-import {connect} from 'react-redux';
+import { Link } from 'react-router-dom';
+import { login } from '../action/actions';
+import { connect } from 'react-redux';
+import { authorizeUser } from '../utils';
 
 
 import {
@@ -10,7 +11,6 @@ import {
     Input,
     Message,
 } from 'semantic-ui-react';
-
 
 class SignIn extends React.Component {
 
@@ -36,7 +36,8 @@ class SignIn extends React.Component {
     };
 
     render() {
-
+        const {isAuthenticated} = this.props.registration;
+        authorizeUser(isAuthenticated);
 
         return (
             <div>
@@ -71,7 +72,7 @@ class SignIn extends React.Component {
                     />
 
 
-                    <Form.Field control={Button} onClick={this.sendData}>Submit </Form.Field>
+                    <Form.Field control={Button} onClick={this.sendData}>Sign In </Form.Field>
                 </Form>
                 <Link to="/signup"> Go to Sign Up</Link>
             </div>

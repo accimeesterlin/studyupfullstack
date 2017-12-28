@@ -18,6 +18,19 @@ const UserSchema = Schema({
 
     session:{
       type:String
+    },
+
+    school:{
+        type:Schema.Types.ObjectId,
+        ref:'University'
+    },
+
+    gender:{
+        type:'String'
+    },
+
+    event:{
+        type:[{type: String, ref: 'Event'}]
     }
 });
 

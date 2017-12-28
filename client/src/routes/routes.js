@@ -5,33 +5,38 @@ import {
     Redirect
 } from 'react-router-dom';
 import {connect} from 'react-redux';
-import Cookies from 'universal-cookie';
 import Signup from '../containers/Signup';
 import SignIn from '../containers/SignIn';
 import Home from '../App';
 import Dashboard from '../containers/Dashboard';
+import Map from '../containers/Map';
+import Event from '../containers/Events';
+import Profile from '../containers/Profile';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
-const cookies = new Cookies();
+
+const isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
 
 
-
-const PublicRoute = ({component: Component, registration, ...rest}) => {
+const PrivateRoute = ({component: Component, ...rest}) => {
     return (
         <Route
-            exact
             {...rest}
-            render={(props) => cookies.get === ''
+            render={(props) => isAuthenticated
                 ? <Component {...props} />
-                : <Redirect to={{pathname: '/dashboard', state: {from: props.location}}}/>}
+                : <Redirect to={{pathname: '/', state: {from: props.location}}}/>}
         />
     )
 };
 
-const PrivateRoute = ({component: Component, registration, ...rest}) => {
+
+const PublicRoute = ({component: Component, ...rest}) => {
     return (
         <Route
+            exact
             {...rest}
-            render={(props) => !registration.isAuthenticated
+            render={(props) => !isAuthenticated
                 ? <Component {...props} />
                 : <Redirect to={{pathname: '/dashboard', state: {from: props.location}}}/>}
         />
@@ -39,12 +44,18 @@ const PrivateRoute = ({component: Component, registration, ...rest}) => {
 };
 
 const routes = (props) => (
+
     <Router>
         <div>
-            <PublicRoute path="/" {...props} component={Home}/>
-            <PublicRoute path="/signup" {...props} component={Signup}/>
-            <PublicRoute path="/signin" {...props} component={SignIn}/>
-            <PrivateRoute path="/dashboard" {...props} component={Dashboard}/>
+            {isAuthenticated ? <Header user = {props.user}/> : ''}
+            <PublicRoute path="/" component={Home}/>
+            <PublicRoute path="/signup" component={Signup}/>
+            <PublicRoute path="/signin" component={SignIn}/>
+            <PrivateRoute path="/map" component={Map}/>
+            <PrivateRoute path="/event" component={Event}/>
+            <PrivateRoute path="/dashboard" component={Dashboard}/>
+            <PrivateRoute path="/profile" component={Profile}/>
+            <Footer/>
         </div>
     </Router>
 );
@@ -52,7 +63,8 @@ const routes = (props) => (
 
 const mapPropsToState = (state) => {
     return {
-        registration: state.registration
+        registration: state.registration,
+        user: state.user
     }
 };
 

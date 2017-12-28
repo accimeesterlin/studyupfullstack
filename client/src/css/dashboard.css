@@ -1,0 +1,13 @@
+
+
+.dashboard{
+    height:40em;
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items: center;
+}
+
+.dashboard a{
+    margin-top:20px;
+}

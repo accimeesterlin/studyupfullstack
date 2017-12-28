@@ -5,15 +5,25 @@ const Schema = mongoose.Schema;
 const EventSchema = Schema({
 
     members:{
+        type:[{ type: String }]
+    },
+
+
+    place:{
         type:String
     },
 
 
-    location:{
+    date:{
         type:String
+    },
+
+    sms:{
+        type:Boolean
     }
 
 });
 
 
-module.exports = mongoose.model("Event", EventSchema);
+const Event = mongoose.model("Event", EventSchema);
+module.exports = Event;

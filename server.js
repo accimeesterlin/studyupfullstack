@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 app.use(cookieParser("thisisgreat"));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const routes = require('./routes/routes');
+const routes = require('./server_routes/routes');
 
 app.use('/api', routes);
 

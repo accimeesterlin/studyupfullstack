@@ -25,10 +25,25 @@ export const login = (existing_user) => {
 };
 
 
-
-export const authenticate = (isAuthenticated) => {
+export const schedule_event = (event) => {
     return{
-        type:"SET_AUTHENTICATION",
-        isAuthenticated
+        type:'SCHEDULE_EVENT',
+        payload: axios.post('/api/schedule', event)
+    }
+};
+
+
+export const current_location = () => {
+  return{
+      type:"GET_LOCATION",
+      payload:axios.get('http://ip-api.com/json')
+  }
+};
+
+
+export const get_user_profile = () => {
+    return{
+        type:"GET_USER_PROFILE",
+        payload:axios.get("/api/users")
     }
 };

@@ -1,4 +1,4 @@
-const userReducer = (state = {isAuthenticated: false}, action) => {
+const userReducer = (state = { isAuthenticated: false }, action) => {
     switch (action.type) {
         case "SIGN_UP_FULFILLED":
             return {

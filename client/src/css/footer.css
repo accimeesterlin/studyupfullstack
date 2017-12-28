@@ -1,0 +1,15 @@
+
+
+
+.footer{
+    position: absolute;
+    bottom: 0;
+    height:100px;
+    border:1px solid blue;
+    width:100%;
+    padding:30px;
+}
+
+.footer p{
+    text-align: center;
+}

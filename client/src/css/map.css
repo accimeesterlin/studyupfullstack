@@ -1,0 +1,15 @@
+.map{
+
+}
+
+
+.map .row .map__display{
+    height:35em;
+    margin-top:20px;
+}
+
+.map .map__display--map{
+    position: relative;
+    right:30px;
+    top:10px;
+}

@@ -1,0 +1,25 @@
+
+.header {
+    border: 1px solid red;
+    padding: 20px;
+}
+
+.header .more-options i {
+    display: flex;
+    justify-content: flex-end;
+    color: red;
+    font-size: 25px;
+}
+.header .more-options .menu{
+    padding:15px;
+}
+
+.header .more-options .menu a div{
+    margin-top:10px;
+}
+
+
+.header .profile i {
+    font-size: 25px;
+
+}
