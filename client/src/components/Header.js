@@ -14,9 +14,9 @@ const Header = ({user}) => {
                 <Grid.Row>
                     <Grid.Column width={2} className="profile">
                         <Label as='a' image>
-                            <img
+                            <img width = {8}
                                 src='https://www.serviceseeking.com.au/assets/business_profile/default-profile-pic.svg'/>
-                            { 'Welcome ' + username }
+                            {  username }
                         </Label>
                     </Grid.Column>
 

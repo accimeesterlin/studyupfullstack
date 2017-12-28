@@ -34,7 +34,7 @@ export const schedule_event = (event) => {
 
 
 export const current_location = () => {
-  return{
+  return {
       type:"GET_LOCATION",
       payload:axios.get('http://ip-api.com/json')
   }

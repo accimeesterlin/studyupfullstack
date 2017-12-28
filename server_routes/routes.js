@@ -50,7 +50,6 @@ const verifyCookie = (req, res, next) => {
 };
 
 
-// Middleware
 
 
 router.get("/users", verifyCookie, (req, res) => {
@@ -58,7 +57,7 @@ router.get("/users", verifyCookie, (req, res) => {
     console.log(req.user);
     User.findOne({_id: userId})
         .select('-password -_id')
-        .populate('school')
+        .populate('school event')
         .then((user) => {
             console.log("User: ", user);
             res.status(200).json(user);
@@ -128,7 +127,6 @@ router.post('/signup', (req, res) => {
 router.post('/signin', (req, res) => {
     const {email, password} = req.body;
     const cookies = req.cookies;
-    console.log("Cookie: ", cookies);
     User.findOne({email})
         .then((user) => {
             if (!bcrypt.compareSync(password, user.password)) {
@@ -150,7 +148,6 @@ router.post('/signin', (req, res) => {
 
 router.post('/schedule', verifyCookie, (req, res) => {
     const {place, sms, date} = req.body;
-    console.log("Body: ", req.body);
 
     Event.findOne({date})
         .then((event) => {
@@ -168,13 +165,39 @@ router.post('/schedule', verifyCookie, (req, res) => {
                         res.status(400).json({err});
                     }
                     else {
-                        res.status(200).json({msg:'Data Saved!!'})
+                        User.findOne({_id: req.user.userId})
+                            .then((user) => {
+                                user.event.push(add_event._id);
+                                user.save((err) => {
+                                    if(err)
+                                        return err;
+                                    res.json("Everything went well");
+                                });
+                            })
+                            .catch((err) => {
+
+                            });
                     }
                 });
             }
         })
         .catch((err) => {
             res.status(400).json({msg: 'Internal database issues'});
+        });
+});
+
+
+
+// Dummy Test
+router.get('/check_schedules', (req, res) => {
+    User.findOne({email: 'kddeveloper'})
+        .select('-password')
+        .populate('event')
+        .then((user) => {
+            res.json(user);
+        })
+        .catch((err) => {
+            res.json(err);
         });
 });
 

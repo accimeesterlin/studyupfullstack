@@ -12,6 +12,7 @@ import Dashboard from '../containers/Dashboard';
 import Map from '../containers/Map';
 import Event from '../containers/Events';
 import Profile from '../containers/Profile';
+import List_events from '../containers/List_events';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -22,6 +23,7 @@ const isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
 const PrivateRoute = ({component: Component, ...rest}) => {
     return (
         <Route
+            exact
             {...rest}
             render={(props) => isAuthenticated
                 ? <Component {...props} />
@@ -55,6 +57,7 @@ const routes = (props) => (
             <PrivateRoute path="/event" component={Event}/>
             <PrivateRoute path="/dashboard" component={Dashboard}/>
             <PrivateRoute path="/profile" component={Profile}/>
+            <PrivateRoute path="/event/lists" component={List_events}/>
             <Footer/>
         </div>
     </Router>
