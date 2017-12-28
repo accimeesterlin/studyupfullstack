@@ -3,7 +3,7 @@ import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import {Grid} from 'semantic-ui-react';
 import {current_location} from '../action/actions';
 import {connect} from 'react-redux';
-import '../css/map.css';
+import '../scss/map.scss';
 
 export class MapContainer extends Component {
 
