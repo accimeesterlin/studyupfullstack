@@ -4,7 +4,7 @@ const Event = require('../models/event');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const axios = require('axios');
+const rp = require('request-promise');
 
 const router = express.Router();
 
@@ -51,21 +51,22 @@ const verifyCookie = (req, res, next) => {
 };
 
 
-router.get('/geocode', verifyCookie, (req, res) => {
+router.get('/geocode', (req, res) => {
     const address = req.param('address');
     const endpoint = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
     const key = '&key=AIzaSyCRKkfdFDQBX9qDs8sbu5BD62GweN2kMg0';
 
 
-    axios({
-        url: endpoint + address + key,
-        method:'GET'
+    rp({
+        uri: endpoint + address + key,
+        method:'GET',
+        json:true
     })
         .then((response) => {
-            res.status(200).json(response.data);
+            res.status(200).json(response);
         })
         .catch((err) => {
-            res.status(200).json(err);
+            res.status(400).json(err);
         });
 });
 

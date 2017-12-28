@@ -1,11 +1,17 @@
 import React, {Component} from 'react'
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import {Grid} from 'semantic-ui-react';
-import {current_location, get_user_profile, event_location} from '../action/actions';
+import {current_location, get_user_profile, geocode_marker} from '../action/actions';
 import {connect} from 'react-redux';
 import '../scss/map.scss';
 
 export class MapContainer extends Component {
+
+    constructor() {
+        super();
+
+        this.state = {};
+    }
 
     onMarkerClick = (props, marker, e) => {
         console.log("Props: ", props);
@@ -15,25 +21,41 @@ export class MapContainer extends Component {
 
     componentWillMount() {
         this.props.dispatch(current_location());
-        this.props.dispatch(get_user_profile());
+        this.props.dispatch(get_user_profile("Roswell"));
+        console.log("Hello World");
+        const locations = JSON.parse(localStorage.getItem('locations'));
+        console.log("Locations: ", locations);
+        locations.map((el) => {
+            console.log("Component Mount: ",el);
+            this.props.dispatch(geocode_marker(el));
 
+        });
+    }
+
+
+    componentDidMount() {
 
     }
 
 
     convertToGeocode = () => {
         const {event} = this.props.user;
+        const locations = [];
         event ? event.map(({place}) => {
-            this.props.dispatch(event_location(place));
+            locations.push(place);
         }) : console.log("Not Loading yet");
-    };
 
+        localStorage.setItem('locations', JSON.stringify(locations));
+        return locations;
+    };
 
 
     render() {
 
+       if(this.props.user){
+           this.convertToGeocode();
+       }
 
-        console.log("Location: ", this.props.current_location);
         return (
             <Grid className="map">
                 <Grid.Row>
@@ -41,25 +63,30 @@ export class MapContainer extends Component {
                         <p>I am here</p>
                     </Grid.Column>
 
+
                     <Grid.Column width={12} className="map__display">
 
                         {
-                            this.props.current_location.lon ? <Map
+                            this.props.geocode ? <Map
                                 google={this.props.google}
-                                zoom={10}
+                                zoom={8}
                                 className="map__display--map"
                                 initialCenter={{
-                                    lat: this.props.current_location.lat,
-                                    lng: this.props.current_location.lon
+                                    lat: 33.753746,
+                                    lng: -84.386330
                                 }}
                             >
 
-                                <Marker
-                                    draggable={true}
-                                    onClick={this.onMarkerClick}
-                                    title={'The marker`s title will appear as a tooltip.'}
-                                    name={'SOMA'}
-                                    position={{lat: 37.778519, lng: -122.405640}}/>
+                                {
+                                    this.props.geocode.map(({lat, lng}) => (
+                                        <Marker
+                                            draggable={true}
+                                            onClick={this.onMarkerClick}
+                                            title={'The marker`s title will appear as a tooltip.'}
+                                            name={'SOMA'}
+                                            position={{lat, lng}}/>
+                                    ))
+                                }
                                 <Marker
                                     name={'Dolores park'}
                                     position={{lat: 37.759703, lng: -122.428093}}/>
@@ -84,7 +111,8 @@ export class MapContainer extends Component {
 const mapPropsToState = (state) => {
     return {
         current_location: state.current_location,
-        user:state.user
+        user: state.user,
+        geocode: state.geocode
     }
 };
 

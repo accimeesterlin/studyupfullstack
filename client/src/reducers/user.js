@@ -1,10 +1,8 @@
-
-
 const get_user_info = (state = {}, action) => {
 
-    switch(action.type){
+    switch (action.type) {
         case "GET_USER_PROFILE_FULFILLED":
-            return { ...state, ...action.payload.data};
+            return {...state, ...action.payload.data};
 
         default:
             return state;

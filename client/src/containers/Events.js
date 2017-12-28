@@ -31,7 +31,8 @@ class Event extends React.Component {
     };
 
     submit = () => {
-        this.props.dispatch(schedule_event(this.state))
+        this.props.dispatch(schedule_event(this.state));
+
     };
 
     render() {
@@ -88,7 +89,8 @@ class Event extends React.Component {
 
 const mapPropsToState = (state) => {
     return {
-        user: state.user
+        user: state.user,
+        geocode: state.geocode
     }
 };
 export default connect(mapPropsToState)(Event);

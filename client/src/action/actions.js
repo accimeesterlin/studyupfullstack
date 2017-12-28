@@ -40,11 +40,11 @@ export const current_location = () => {
   }
 };
 
-export const event_location = (address, ) => {
-  return {
-      type:'EVENT_LOCATION',
-      payload: axios.get('/api/geocode', address)
-  }
+export const geocode_marker = (address) => {
+    return{
+        type:"GEOCODE",
+        payload:axios.get("/api/geocode?address=" + address)
+    }
 };
 
 
