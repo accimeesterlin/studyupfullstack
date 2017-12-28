@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import {Grid} from 'semantic-ui-react';
-import {current_location} from '../action/actions';
+import {current_location, get_user_profile, event_location} from '../action/actions';
 import {connect} from 'react-redux';
 import '../scss/map.scss';
 
@@ -15,16 +15,16 @@ export class MapContainer extends Component {
 
     componentWillMount() {
         this.props.dispatch(current_location());
+        this.props.dispatch(get_user_profile());
+
+
     }
 
 
     convertToGeocode = () => {
         const {event} = this.props.user;
-        console.log(event);
-
-        event ? event.results.map(({geometry}) => {
-            console.log("Long: ", geometry.lng);
-            console.log("Lat: ", geometry.lat);
+        event ? event.map(({place}) => {
+            this.props.dispatch(event_location(place));
         }) : console.log("Not Loading yet");
     };
 
@@ -32,8 +32,8 @@ export class MapContainer extends Component {
 
     render() {
 
-        this.convertToGeocode();
 
+        console.log("Location: ", this.props.current_location);
         return (
             <Grid className="map">
                 <Grid.Row>
