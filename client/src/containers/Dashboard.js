@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import {Button, Icon} from 'semantic-ui-react';
 import {connect} from 'react-redux';
+import {locationsInStorage} from '../utils';
 import {get_user_profile} from '../action/actions';
 import '../scss/dashboard.scss';
 
@@ -21,6 +22,9 @@ class Dashboard extends React.Component {
 
 
     render() {
+        const {event} = this.props.user;
+        locationsInStorage(event);
+
         return (
             <div className="dashboard">
                 <Link to = '/map'> <Button> <Icon name = 'calendar'/> Study Now </Button></Link>
@@ -31,6 +35,11 @@ class Dashboard extends React.Component {
 }
 
 
+const mapPropsToState = (state) => {
+  return{
+      user: state.user
+  }
+};
 
 
-export default connect(null)(Dashboard);
+export default connect(mapPropsToState)(Dashboard);

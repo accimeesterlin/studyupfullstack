@@ -32,6 +32,13 @@ export const schedule_event = (event) => {
     }
 };
 
+export const schedule_confirmation = (confirmation) => {
+  return{
+      type:'SCHEDULE_CONFIRMATION',
+      confirmation
+  }
+};
+
 
 export const current_location = () => {
   return {

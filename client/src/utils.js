@@ -29,6 +29,16 @@ module.exports = {
             }
         }
         return false;
+    },
+
+    locationsInStorage: (event) => {
+        const locations = [];
+        event ? event.map(({place}) => {
+            locations.push(place);
+        }) : console.log("Not Loading yet");
+
+        localStorage.setItem('locations', JSON.stringify(locations));
+        return locations;
     }
 
 

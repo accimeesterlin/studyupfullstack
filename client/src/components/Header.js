@@ -12,7 +12,7 @@ const Header = ({user}) => {
         <div className="header">
             <Grid>
                 <Grid.Row>
-                    <Grid.Column width={2} className="profile">
+                    <Grid.Column width={5} className="profile">
                         <Label as='a' image>
                             <img src='https://www.serviceseeking.com.au/assets/business_profile/default-profile-pic.svg' alt='Logo'/>
                             { 'Welcome ' + username }
@@ -20,7 +20,7 @@ const Header = ({user}) => {
                     </Grid.Column>
 
 
-                    <Grid.Column width={12} className="profile">
+                    <Grid.Column width={9} className="profile">
 
                     </Grid.Column>
 

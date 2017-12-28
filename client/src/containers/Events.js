@@ -1,8 +1,14 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {isEmptyObj} from '../utils';
-import {get_user_profile, schedule_event} from '../action/actions';
+import {
+    get_user_profile,
+    schedule_event,
+    schedule_confirmation
+} from '../action/actions';
 import {Form, Input, Button, Checkbox} from 'semantic-ui-react';
+import {Redirect, Link} from 'react-router-dom';
+
 
 
 class Event extends React.Component {
@@ -37,10 +43,21 @@ class Event extends React.Component {
 
     render() {
 
+        if (this.props.schedule.msg === true) {
+            this.props.dispatch(schedule_confirmation(false));
+            return ( <Redirect to={{
+                pathname: '/event/lists',
+                state: {from: this.props.location}
+            }}/>);
+        }
 
         return (
             <div>
                 <h2>Set a time to study later</h2>
+
+                <p>Or</p>
+
+                <Link to = '/event/lists'> <p>See all your availability </p> </Link>
 
                 <Form>
 
@@ -90,7 +107,8 @@ class Event extends React.Component {
 const mapPropsToState = (state) => {
     return {
         user: state.user,
-        geocode: state.geocode
+        geocode: state.geocode,
+        schedule: state.schedule
     }
 };
 export default connect(mapPropsToState)(Event);

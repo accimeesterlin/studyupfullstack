@@ -1,7 +1,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {get_user_profile} from '../action/actions';
-import {Table} from 'semantic-ui-react';
+import {Table, Button} from 'semantic-ui-react';
+import {Link} from 'react-router-dom';
+import {locationsInStorage} from '../utils';
+
 
 
 class List_events extends React.Component {
@@ -16,10 +19,11 @@ class List_events extends React.Component {
         <Table.Body>
             {event ? event.map(({place, date, sms}, key) => (
                     <Table.Row key={key}>
+                        <Table.Cell><p>{key + 1}</p></Table.Cell>
                         <Table.Cell><p>{place}</p></Table.Cell>
                         <Table.Cell><p>{window.moment(date).format("dddd, MMMM Do YYYY")}</p></Table.Cell>
                         <Table.Cell><p>{window.moment(date).toNow(true) + " from now"}</p></Table.Cell>
-                        <Table.Cell><p>{ sms ? "Sent" : "Loading..."}</p></Table.Cell>
+                        <Table.Cell><p>{sms ? "Sent" : "Loading..."}</p></Table.Cell>
                     </Table.Row>
                 )) :
                 <Table.Row>
@@ -29,16 +33,21 @@ class List_events extends React.Component {
     );
 
 
-    render() {
-        const {event} = this.props.user;
 
-        console.log("Events: ", event);
+    render() {
+
+        const {event} = this.props.user;
+        locationsInStorage(event);
+
         return (
             <div>
                 <h2> This is a list of all your events here </h2>
+
+                <Link to = '/event'><Button> Put yourself available for another time</Button> </Link>
                 <Table>
                     <Table.Header>
                         <Table.Row>
+                            <Table.HeaderCell> Number</Table.HeaderCell>
                             <Table.HeaderCell> Place</Table.HeaderCell>
                             <Table.HeaderCell> Date </Table.HeaderCell>
                             <Table.HeaderCell> Day remaining </Table.HeaderCell>

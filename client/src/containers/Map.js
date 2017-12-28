@@ -1,11 +1,11 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import {Grid} from 'semantic-ui-react';
 import {current_location, get_user_profile, geocode_marker} from '../action/actions';
 import {connect} from 'react-redux';
 import '../scss/map.scss';
 
-export class MapContainer extends Component {
+export class MapContainer extends React.Component {
 
     constructor() {
         super();
@@ -20,41 +20,22 @@ export class MapContainer extends Component {
     };
 
     componentWillMount() {
-        this.props.dispatch(current_location());
-        this.props.dispatch(get_user_profile("Roswell"));
-        console.log("Hello World");
+        // this.props.dispatch(current_location()); // Their server is down, craps
+        this.props.dispatch(get_user_profile());
         const locations = JSON.parse(localStorage.getItem('locations'));
-        console.log("Locations: ", locations);
-        locations.map((el) => {
-            console.log("Component Mount: ",el);
-            this.props.dispatch(geocode_marker(el));
-
+        locations.map((place) => {
+            this.props.dispatch(geocode_marker(place));
         });
     }
 
-
-    componentDidMount() {
-
-    }
-
-
-    convertToGeocode = () => {
-        const {event} = this.props.user;
-        const locations = [];
-        event ? event.map(({place}) => {
-            locations.push(place);
-        }) : console.log("Not Loading yet");
-
-        localStorage.setItem('locations', JSON.stringify(locations));
-        return locations;
+    fetchPlaces = (mapProps, map) => {
+        const { google } = mapProps;
+        const service = new google.maps.places.PlacesService(map);
+        console.log("Service: ", service);
     };
 
 
     render() {
-
-       if(this.props.user){
-           this.convertToGeocode();
-       }
 
         return (
             <Grid className="map">
@@ -75,22 +56,20 @@ export class MapContainer extends Component {
                                     lat: 33.753746,
                                     lng: -84.386330
                                 }}
+                                onReady = {this.fetchPlaces}
                             >
 
                                 {
-                                    this.props.geocode.map(({lat, lng}) => (
+                                    this.props.geocode.map(({lat, lng}, index) => (
                                         <Marker
                                             draggable={true}
+                                            key = {index}
                                             onClick={this.onMarkerClick}
                                             title={'The marker`s title will appear as a tooltip.'}
                                             name={'SOMA'}
                                             position={{lat, lng}}/>
                                     ))
                                 }
-                                <Marker
-                                    name={'Dolores park'}
-                                    position={{lat: 37.759703, lng: -122.428093}}/>
-                                <Marker/>
 
                                 <InfoWindow>
                                     <div>

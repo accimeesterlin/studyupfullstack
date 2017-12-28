@@ -59,8 +59,8 @@ router.get('/geocode', (req, res) => {
 
     rp({
         uri: endpoint + address + key,
-        method:'GET',
-        json:true
+        method: 'GET',
+        json: true
     })
         .then((response) => {
             res.status(200).json(response);
@@ -183,17 +183,15 @@ router.post('/schedule', verifyCookie, (req, res) => {
                     user.save((err) => {
                         if (err)
                             return err;
-                        res.json("Everything went well");
+                        res.json({msg: true});
                     });
                 })
                 .catch((err) => {
-
+                    res.status(400).json({err});
                 });
         }
     });
 });
-
-
 
 
 // Dummy Test
