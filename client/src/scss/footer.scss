@@ -1,15 +1,32 @@
-
-
-
-.footer{
-    position: absolute;
-    bottom: 0;
-    height:100px;
-    border:1px solid blue;
-    width:100%;
-    padding:30px;
+.footer {
+    margin: 0 !important;
+    background: #444;
+    padding: 15px 0 !important;
+    h3 {
+        font-weight: 300;
+        color: #fff;
+        border-bottom: 1px solid #bbb;
+        padding: 3px 0;
+    }
+    p {
+        color: #fff;
+    }
+    .ui.link.list .item {
+        color: #eee;
+        font-weight: 300;
+    }
 }
 
-.footer p{
-    text-align: center;
-}
+
+// .footer{
+//     position: absolute;
+//     bottom: 0;
+//     height:100px;
+//     border:1px solid blue;
+//     width:100%;
+//     padding:30px;
+// }
+
+// .footer p{
+//     text-align: center;
+// }

@@ -46,15 +46,17 @@ const PublicRoute = ({component: Component, ...rest}) => {
 const routes = (props) => (
 
     <Router>
-        <div>
+        <div className="container">
             {isAuthenticated ? <Header user = {props.user}/> : ''}
-            <PublicRoute path="/" component={Home}/>
-            <PublicRoute path="/signup" component={Signup}/>
-            <PublicRoute path="/signin" component={SignIn}/>
-            <PrivateRoute path="/map" component={Map}/>
-            <PrivateRoute path="/event" component={Event}/>
-            <PrivateRoute path="/dashboard" component={Dashboard}/>
-            <PrivateRoute path="/profile" component={Profile}/>
+            <div className="content">
+                <PublicRoute path="/" component={Home} />
+                <PublicRoute path="/signup" component={Signup} />
+                <PublicRoute path="/signin" component={SignIn} />
+                <PrivateRoute path="/map" component={Map} />
+                <PrivateRoute path="/event" component={Event} />
+                <PrivateRoute path="/dashboard" component={Dashboard} />
+                <PrivateRoute path="/profile" component={Profile} />
+            </div>
             <Footer/>
         </div>
     </Router>
