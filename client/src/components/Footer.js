@@ -25,9 +25,14 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-
-            <div className="four column centered row">
-                <p>&copy; StudyUp</p>
+            
+            <div className="four column row">
+                <div className="column">
+                    <p>&copy; {window.moment().format('YYYY')} StudyUp</p>
+                </div>
+                <div className="column">
+                    <p>Development by love &amp; coffee &#124; Esterlin/JD</p>
+                </div>
             </div>
         </div>
     );

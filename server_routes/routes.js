@@ -4,6 +4,7 @@ const Event = require('../models/event');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 
 const router = express.Router();
 
@@ -50,7 +51,23 @@ const verifyCookie = (req, res, next) => {
 };
 
 
-// Middleware
+router.get('/geocode', verifyCookie, (req, res) => {
+    const address = req.param('address');
+    const endpoint = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
+    const key = '&key=AIzaSyCRKkfdFDQBX9qDs8sbu5BD62GweN2kMg0';
+
+
+    axios({
+        url: endpoint + address + key,
+        method:'GET'
+    })
+        .then((response) => {
+            res.status(200).json(response.data);
+        })
+        .catch((err) => {
+            res.status(200).json(err);
+        });
+});
 
 
 router.get("/users", verifyCookie, (req, res) => {
@@ -58,7 +75,7 @@ router.get("/users", verifyCookie, (req, res) => {
     console.log(req.user);
     User.findOne({_id: userId})
         .select('-password -_id')
-        .populate('school')
+        .populate('school event')
         .then((user) => {
             console.log("User: ", user);
             res.status(200).json(user);
@@ -128,7 +145,6 @@ router.post('/signup', (req, res) => {
 router.post('/signin', (req, res) => {
     const {email, password} = req.body;
     const cookies = req.cookies;
-    console.log("Cookie: ", cookies);
     User.findOne({email})
         .then((user) => {
             if (!bcrypt.compareSync(password, user.password)) {
@@ -146,35 +162,49 @@ router.post('/signin', (req, res) => {
 });
 
 
-
-
 router.post('/schedule', verifyCookie, (req, res) => {
     const {place, sms, date} = req.body;
-    console.log("Body: ", req.body);
 
-    Event.findOne({date})
-        .then((event) => {
-            if (event) {
-                res.status(404).json({msg: 'You are already scheduled for that date'});
-            } else {
-                const add_event = new Event({
-                    place,
-                    sms,
-                    date
-                });
+    const add_event = new Event({
+        place,
+        sms,
+        date
+    });
 
-                add_event.save((err) => {
-                    if (err) {
-                        res.status(400).json({err});
-                    }
-                    else {
-                        res.status(200).json({msg:'Data Saved!!'})
-                    }
+    add_event.save((err) => {
+        if (err) {
+            res.status(400).json({err});
+        }
+        else {
+            User.findOne({_id: req.user.userId})
+                .then((user) => {
+                    user.event.push(add_event._id);
+                    user.save((err) => {
+                        if (err)
+                            return err;
+                        res.json("Everything went well");
+                    });
+                })
+                .catch((err) => {
+
                 });
-            }
+        }
+    });
+});
+
+
+
+
+// Dummy Test
+router.get('/check_schedules', (req, res) => {
+    User.findOne({email: 'kddeveloper'})
+        .select('-password')
+        .populate('event')
+        .then((user) => {
+            res.json(user);
         })
         .catch((err) => {
-            res.status(400).json({msg: 'Internal database issues'});
+            res.json(err);
         });
 });
 

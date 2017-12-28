@@ -34,9 +34,16 @@ export const schedule_event = (event) => {
 
 
 export const current_location = () => {
-  return{
+  return {
       type:"GET_LOCATION",
       payload:axios.get('http://ip-api.com/json')
+  }
+};
+
+export const event_location = (address, ) => {
+  return {
+      type:'EVENT_LOCATION',
+      payload: axios.get('/api/geocode', address)
   }
 };
 

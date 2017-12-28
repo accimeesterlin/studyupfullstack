@@ -33,6 +33,7 @@ const Header = ({user}) => {
                                 <Link to='/map'><Dropdown.Item> Study now </Dropdown.Item> </Link>
                                 <Link to='/event'><Dropdown.Item> Study later </Dropdown.Item> </Link>
                                 <Link to='/dashboard'><Dropdown.Item> Dashboard </Dropdown.Item> </Link>
+                                <Link to='/event/lists'><Dropdown.Item> Events </Dropdown.Item> </Link>
                                 <Link to='/'><Dropdown.Item onClick={clearCookie}> Logout </Dropdown.Item></Link>
                             </Dropdown.Menu>
                         </Dropdown>
