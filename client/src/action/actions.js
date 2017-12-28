@@ -40,6 +40,13 @@ export const current_location = () => {
   }
 };
 
+export const event_location = (address, ) => {
+  return {
+      type:'EVENT_LOCATION',
+      payload: axios.get('/api/geocode', address)
+  }
+};
+
 
 export const get_user_profile = () => {
     return{

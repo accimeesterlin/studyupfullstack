@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {Button, Icon} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 import {get_user_profile} from '../action/actions';
-import '../css/dashboard.css';
+import '../scss/dashboard.scss';
 
 
 

@@ -3,7 +3,7 @@ import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import {Grid} from 'semantic-ui-react';
 import {current_location} from '../action/actions';
 import {connect} from 'react-redux';
-import '../css/map.css';
+import '../scss/map.scss';
 
 export class MapContainer extends Component {
 
@@ -17,7 +17,22 @@ export class MapContainer extends Component {
         this.props.dispatch(current_location());
     }
 
+
+    convertToGeocode = () => {
+        const {event} = this.props.user;
+        console.log(event);
+
+        event ? event.results.map(({geometry}) => {
+            console.log("Long: ", geometry.lng);
+            console.log("Lat: ", geometry.lat);
+        }) : console.log("Not Loading yet");
+    };
+
+
+
     render() {
+
+        this.convertToGeocode();
 
         return (
             <Grid className="map">
@@ -68,7 +83,8 @@ export class MapContainer extends Component {
 
 const mapPropsToState = (state) => {
     return {
-        current_location: state.current_location
+        current_location: state.current_location,
+        user:state.user
     }
 };
 

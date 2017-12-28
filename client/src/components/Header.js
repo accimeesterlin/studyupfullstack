@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import {Grid, Dropdown, Label} from 'semantic-ui-react';
 import {clearCookie} from '../utils';
-import '../css/header.css';
+import '../scss/header.scss';
 
 const Header = ({user}) => {
 
@@ -14,9 +14,8 @@ const Header = ({user}) => {
                 <Grid.Row>
                     <Grid.Column width={2} className="profile">
                         <Label as='a' image>
-                            <img width = {8}
-                                src='https://www.serviceseeking.com.au/assets/business_profile/default-profile-pic.svg'/>
-                            {  username }
+                            <img src='https://www.serviceseeking.com.au/assets/business_profile/default-profile-pic.svg' alt='Logo'/>
+                            { 'Welcome ' + username }
                         </Label>
                     </Grid.Column>
 
@@ -34,6 +33,7 @@ const Header = ({user}) => {
                                 <Link to='/map'><Dropdown.Item> Study now </Dropdown.Item> </Link>
                                 <Link to='/event'><Dropdown.Item> Study later </Dropdown.Item> </Link>
                                 <Link to='/dashboard'><Dropdown.Item> Dashboard </Dropdown.Item> </Link>
+                                <Link to='/event/lists'><Dropdown.Item> Events </Dropdown.Item> </Link>
                                 <Link to='/'><Dropdown.Item onClick={clearCookie}> Logout </Dropdown.Item></Link>
                             </Dropdown.Menu>
                         </Dropdown>

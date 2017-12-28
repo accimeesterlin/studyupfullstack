@@ -1,19 +1,33 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {get_user_profile} from '../action/actions';
-import {isEmptyObj} from '../utils';
 import {Table} from 'semantic-ui-react';
+import moment from 'moment';
 
 
 class List_events extends React.Component {
 
 
     componentWillMount() {
-        const {user} = this.props;
-        if (!isEmptyObj(user)) {
-            this.props.dispatch(get_user_profile());
-        }
+        this.props.dispatch(get_user_profile());
     }
+
+
+    displayEvents = (event) => (
+        <Table.Body>
+            {event ? event.map(({place, date, sms}, key) => (
+                    <Table.Row key={key}>
+                        <Table.Cell><p>{place}</p></Table.Cell>
+                        <Table.Cell><p>{moment(date).format("dddd, MMMM Do YYYY")}</p></Table.Cell>
+                        <Table.Cell><p>{moment(date).toNow(true) + " from now"}</p></Table.Cell>
+                        <Table.Cell><p>{ sms ? "Sent" : "Loading..."}</p></Table.Cell>
+                    </Table.Row>
+                )) :
+                <Table.Row>
+                    <Table.Cell> Loading... </Table.Cell>
+                </Table.Row>}
+        </Table.Body>
+    );
 
 
     render() {
@@ -28,19 +42,13 @@ class List_events extends React.Component {
                         <Table.Row>
                             <Table.HeaderCell> Place</Table.HeaderCell>
                             <Table.HeaderCell> Date </Table.HeaderCell>
+                            <Table.HeaderCell> Day remaining </Table.HeaderCell>
                             <Table.HeaderCell> SMS </Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
 
-                    <Table.Body>
-                        { event ? event.map(({place, date, sms}) => (
-                            <Table.Row>
-                                <Table.Cell> {place} </Table.Cell>
-                                <Table.Cell> {date} </Table.Cell>
-                                <Table.Cell> {sms} </Table.Cell>
-                            </Table.Row>
-                        )) : '' }
-                    </Table.Body>
+                    {this.displayEvents(event)}
+
                 </Table>
             </div>
         );
