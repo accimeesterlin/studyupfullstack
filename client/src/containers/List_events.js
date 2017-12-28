@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {get_user_profile} from '../action/actions';
 import {Table} from 'semantic-ui-react';
-import moment from 'moment';
 
 
 class List_events extends React.Component {
@@ -18,8 +17,8 @@ class List_events extends React.Component {
             {event ? event.map(({place, date, sms}, key) => (
                     <Table.Row key={key}>
                         <Table.Cell><p>{place}</p></Table.Cell>
-                        <Table.Cell><p>{moment(date).format("dddd, MMMM Do YYYY")}</p></Table.Cell>
-                        <Table.Cell><p>{moment(date).toNow(true) + " from now"}</p></Table.Cell>
+                        <Table.Cell><p>{window.moment(date).format("dddd, MMMM Do YYYY")}</p></Table.Cell>
+                        <Table.Cell><p>{window.moment(date).toNow(true) + " from now"}</p></Table.Cell>
                         <Table.Cell><p>{ sms ? "Sent" : "Loading..."}</p></Table.Cell>
                     </Table.Row>
                 )) :
