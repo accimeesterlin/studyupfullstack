@@ -4,6 +4,7 @@ import current_location from './location';
 import user from './user';
 import geocode from './geocode';
 import schedule from './schedule';
+import events from './events';
 
 
 const reducers = combineReducers({
@@ -11,7 +12,8 @@ const reducers = combineReducers({
     current_location,
     user,
     geocode,
-    schedule
+    schedule,
+    events
 });
 
 

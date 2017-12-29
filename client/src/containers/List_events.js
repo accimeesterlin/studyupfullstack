@@ -35,7 +35,6 @@ class List_events extends React.Component {
 
 
     render() {
-
         const {event} = this.props.user;
         locationsInStorage(event);
 
@@ -43,7 +42,7 @@ class List_events extends React.Component {
             <div>
                 <h2> This is a list of all your events here </h2>
 
-                <Link to = '/event'><Button> Put yourself available for another time</Button> </Link>
+                <Link to = '/event'><Button> Create another study group</Button> </Link>
                 <Table>
                     <Table.Header>
                         <Table.Row>

@@ -13,6 +13,13 @@ const EventSchema = Schema({
         type:String
     },
 
+    group:{
+      type:String
+    },
+
+    subject:{
+        type:String
+    },
 
     date:{
         type:String

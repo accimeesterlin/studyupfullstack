@@ -1,15 +1,26 @@
-.map{
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
+#root, #app, #map {
+  height: 100%;
+}
+
+#map {
+  margin-left: 200px;
 }
 
 
-.map .row .map__display{
-    height:35em;
-    margin-top:20px;
-}
-
-.map .map__display--map{
+.map {
+  .row .map__display {
+    height: 35em;
     position: relative;
-    right:30px;
-    top:10px;
+    right: 25px;
+    top: 0px;
+  }
+
+
 }
+

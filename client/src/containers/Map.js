@@ -1,44 +1,82 @@
 import React from 'react'
-import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import {Grid} from 'semantic-ui-react';
-import {current_location, get_user_profile, geocode_marker} from '../action/actions';
+import {current_location, get_user_profile, geocode_marker, all_events} from '../action/actions';
 import {connect} from 'react-redux';
 import '../scss/map.scss';
+import university from '../images/university.png';
+
+
+const {latitude, longitude} = JSON.parse(localStorage.getItem('geocode'));
+
+
+let infowindow = new window.google.maps.InfoWindow();
+
 
 export class MapContainer extends React.Component {
 
     constructor() {
         super();
 
-        this.state = {};
+        this.state = {zoom: 5};
     }
 
-    onMarkerClick = (props, marker, e) => {
-        console.log("Props: ", props);
-        console.log("Marker: ", marker);
-        console.log("E: ", e);
-    };
-
     componentWillMount() {
-        // this.props.dispatch(current_location()); // Their server is down, craps
+        this.props.dispatch(current_location());
         this.props.dispatch(get_user_profile());
+        this.props.dispatch(all_events());
         const locations = JSON.parse(localStorage.getItem('locations'));
         locations.map((place) => {
             this.props.dispatch(geocode_marker(place));
         });
     }
 
-    fetchPlaces = (mapProps, map) => {
-        const { google } = mapProps;
-        const service = new google.maps.places.PlacesService(map);
-        console.log("Service: ", service);
+    componentDidMount() {
+
+        window.map = new window.google.maps.Map(document.getElementById('map'), {
+            center: {lat: latitude, lng: longitude},
+            zoom: 10,
+            mapTypeId: 'roadmap',
+            zoomControl: true
+        });
+
+        window.map.addListener('zoom_changed', () => {
+            this.setState({
+                zoom: window.map.getZoom()
+            });
+        })
+    }
+
+    createMarker = (lat, lng) => {
+
+
+        let marker = new window.google.maps.Marker({
+            map: window.map,
+            position: {lat, lng},
+            icon: university,
+            title: 'Checking'
+        });
+
+        marker.addListener('click', (e) => {
+            infowindow.setContent(lat.toString());
+            infowindow.open(window.map, marker);
+        });
+
+
     };
 
 
     render() {
 
+        this.props.geocode.map(({lat, lng}) => {
+            this.createMarker(lat, lng);
+        });
+
+
+
         return (
             <Grid className="map">
+
+                <p>Zoom: {this.state.zoom}</p>
                 <Grid.Row>
                     <Grid.Column width={4}>
                         <p>I am here</p>
@@ -46,38 +84,9 @@ export class MapContainer extends React.Component {
 
 
                     <Grid.Column width={12} className="map__display">
+                        <div id="map">
 
-                        {
-                            this.props.geocode ? <Map
-                                google={this.props.google}
-                                zoom={8}
-                                className="map__display--map"
-                                initialCenter={{
-                                    lat: 33.753746,
-                                    lng: -84.386330
-                                }}
-                                onReady = {this.fetchPlaces}
-                            >
-
-                                {
-                                    this.props.geocode.map(({lat, lng}, index) => (
-                                        <Marker
-                                            draggable={true}
-                                            key = {index}
-                                            onClick={this.onMarkerClick}
-                                            title={'The marker`s title will appear as a tooltip.'}
-                                            name={'SOMA'}
-                                            position={{lat, lng}}/>
-                                    ))
-                                }
-
-                                <InfoWindow>
-                                    <div>
-                                        <h1>{}</h1>
-                                    </div>
-                                </InfoWindow>
-                            </Map> : <p> Map is loading...</p>
-                        }
+                        </div>
 
                     </Grid.Column>
 
@@ -91,10 +100,9 @@ const mapPropsToState = (state) => {
     return {
         current_location: state.current_location,
         user: state.user,
-        geocode: state.geocode
+        geocode: state.geocode,
+        events: state.events
     }
 };
 
-export default connect(mapPropsToState)(GoogleApiWrapper({
-    apiKey: 'AIzaSyCRKkfdFDQBX9qDs8sbu5BD62GweN2kMg0'
-})(MapContainer));
+export default connect(mapPropsToState)(MapContainer);

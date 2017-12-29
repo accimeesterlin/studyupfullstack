@@ -25,6 +25,14 @@ export const login = (existing_user) => {
 };
 
 
+export const all_events = () => {
+    return{
+       type:"GET_ALL_EVENTS",
+       payload: axios.get('/api/events')
+    }
+};
+
+
 export const schedule_event = (event) => {
     return{
         type:'SCHEDULE_EVENT',
@@ -43,7 +51,7 @@ export const schedule_confirmation = (confirmation) => {
 export const current_location = () => {
   return {
       type:"GET_LOCATION",
-      payload:axios.get('http://ip-api.com/json')
+      payload:axios.get('http://freegeoip.net/json/')
   }
 };
 

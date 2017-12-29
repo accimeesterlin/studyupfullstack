@@ -10,7 +10,6 @@ import {Form, Input, Button, Checkbox} from 'semantic-ui-react';
 import {Redirect, Link} from 'react-router-dom';
 
 
-
 class Event extends React.Component {
     constructor() {
         super();
@@ -23,7 +22,33 @@ class Event extends React.Component {
         if (!isEmptyObj(user)) {
             this.props.dispatch(get_user_profile());
         }
+
+        let map = new window.google.maps.Map('', {});
+
+        this.autocomplete(map);
+
     }
+
+    display_marker = (map) => {
+        let marker = new window.google.maps.Marker({
+            map,
+            position: {lat: -33.8688, lng: 151.2195}
+        });
+
+        return marker;
+    };
+
+    autocomplete = (map) => {
+        let inputNode = document.getElementById('place');
+        let autocomplete = new window.google.maps.places.Autocomplete(inputNode);
+        autocomplete.addListener('place_changed', () => {
+            let place = autocomplete.getPlace();
+
+            this.setState({
+                place: place.formatted_address,
+            });
+        })
+    };
 
     getInputValue = (event, val, attr) => {
         const name = event.target.name;
@@ -51,13 +76,14 @@ class Event extends React.Component {
             }}/>);
         }
 
+
         return (
             <div>
-                <h2>Set a time to study later</h2>
+                <h2>Create a study group</h2>
 
                 <p>Or</p>
 
-                <Link to = '/event/lists'> <p>See all your availability </p> </Link>
+                <Link to='/event/lists'><p>See all your study groups </p></Link>
 
                 <Form>
 
@@ -65,9 +91,33 @@ class Event extends React.Component {
                         <Form.Field
                             control={Input}
                             width={7}
-                            name='place'
+                            name='group'
                             onChange={this.getInputValue}
-                            label='Location'
+                            label='Group Name'
+                            placeholder='Group name...'/>
+                    </Form.Group>
+
+
+
+                    <Form.Group>
+                        <Form.Field
+                            control={Input}
+                            width={7}
+                            name='subject'
+                            onChange={this.getInputValue}
+                            label='Subject to discuss'
+                            placeholder='Subject...'/>
+                    </Form.Group>
+
+
+                    <Form.Group>
+                        <Form.Field
+                            control={Input}
+                            width={7}
+                            name='place'
+                            id = 'place'
+                            onChange={this.getInputValue}
+                            label='Where would you like to meet?'
                             placeholder='Location'/>
                     </Form.Group>
 
@@ -94,10 +144,14 @@ class Event extends React.Component {
 
                     <Form.Group>
                         <Form.Field
-                            control={Button} onClick={this.submit}> Schedule </Form.Field>
+                            control={Button} onClick={this.submit}> Create </Form.Field>
                     </Form.Group>
-
                 </Form>
+
+
+                <div id="map">
+
+                </div>
             </div>
         );
     }
@@ -111,4 +165,5 @@ const mapPropsToState = (state) => {
         schedule: state.schedule
     }
 };
+
 export default connect(mapPropsToState)(Event);

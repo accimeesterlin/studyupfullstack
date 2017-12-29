@@ -75,7 +75,7 @@ router.get("/users", verifyCookie, (req, res) => {
     const {userId} = req.user;
     console.log(req.user);
     User.findOne({_id: userId})
-        .select('-password -_id')
+        .select('-password')
         .populate('school event')
         .then((user) => {
             console.log("User: ", user);
@@ -164,12 +164,15 @@ router.post('/signin', (req, res) => {
 
 
 router.post('/schedule', verifyCookie, (req, res) => {
-    const {place, sms, date} = req.body;
+    const {place, sms, date, group, subject} = req.body;
+    console.log("Body: ", req.body);
 
     const add_event = new Event({
         place,
         sms,
-        date
+        date,
+        group,
+        subject
     });
 
     add_event.save((err) => {
@@ -196,11 +199,25 @@ router.post('/schedule', verifyCookie, (req, res) => {
 
 // Dummy Test
 router.get('/check_schedules', (req, res) => {
-    User.findOne({email: 'kddeveloper'})
+    User.findOne({email: 'accimeesterlin@yahoo.com'})
         .select('-password')
         .populate('event')
         .then((user) => {
             res.json(user);
+        })
+        .catch((err) => {
+            res.json(err);
+        });
+});
+
+
+
+
+// Dummy Test
+router.get('/events', verifyCookie, (req, res) => {
+    Event.find({})
+        .then((events) => {
+            res.json(events);
         })
         .catch((err) => {
             res.json(err);

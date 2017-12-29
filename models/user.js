@@ -29,6 +29,10 @@ const UserSchema = Schema({
         type:'String'
     },
 
+    address:{
+      type:String
+    },
+
     event:{
         type:[{type: String, ref: 'Event'}]
     }

@@ -3,7 +3,6 @@ import {applyMiddleware, createStore} from 'redux';
 import logger from 'redux-logger';
 import promise from 'redux-promise-middleware';
 import ReactDOM from 'react-dom';
-import thunk from 'redux-thunk';
 import './index.scss';
 import Route from './routes/routes';
 import { Provider } from 'react-redux';

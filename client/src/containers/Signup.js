@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {authorizeUser} from '../utils';
 import {Dropdown} from 'semantic-ui-react';
 
+
 import {
     Button,
     Form,
@@ -21,6 +22,12 @@ class Signup extends React.Component {
         this.state = {};
     }
 
+    componentDidMount() {
+        let map = new window.google.maps.Map('', {});
+
+        this.autocomplete(map);
+    }
+
 
     getInputValue = (event, val, attr) => {
         const name = event.target.name;
@@ -30,6 +37,22 @@ class Signup extends React.Component {
         } else {
             this.setState({[name]: value});
         }
+    };
+
+
+    autocomplete = (map) => {
+        let inputNode = document.getElementById('address');
+        let autocomplete = new window.google.maps.places.Autocomplete(inputNode);
+        autocomplete.addListener('place_changed', () => {
+            let place = autocomplete.getPlace();
+            let location = place.geometry.location;
+
+            this.setState({
+                place: place.formatted_address,
+                place_id: place.place_id,
+                place_location: location.toString(),
+            });
+        })
     };
 
     sendData = () => {
@@ -91,8 +114,18 @@ class Signup extends React.Component {
                 <Form error={this.props.registration.error}>
 
                     <Form.Group widths='equal'>
-                        <Form.Field control={Input} name='firstname' label="Firstname: " onChange={this.getInputValue}/>
-                        <Form.Field control={Input} name='lastname' label="Lastname: " onChange={this.getInputValue}/>
+                        <Form.Field
+                            control={Input}
+                            name='firstname'
+                            label="Firstname: "
+                            placeholder='Firstname'
+                            onChange={this.getInputValue}/>
+                        <Form.Field
+                            control={Input}
+                            name='lastname'
+                            label="Lastname: "
+                            placeholder='Lastname'
+                            onChange={this.getInputValue}/>
                     </Form.Group>
 
 
@@ -111,6 +144,20 @@ class Signup extends React.Component {
                     <Form.Group>
                         <Form.Field
                             control={Input}
+                            label="Address"
+                            name='address'
+                            id='address'
+                            placeholder="Please enter your address"
+                            width={16}
+                            onChange={this.getInputValue}
+                        />
+
+                    </Form.Group>
+
+
+                    <Form.Group>
+                        <Form.Field
+                            control={Input}
                             label="Username:"
                             name='username'
                             placeholder="Please enter a username"
@@ -123,10 +170,12 @@ class Signup extends React.Component {
 
                     <Form.Group>
                         <Form.Field width={5}>
+                            <label>Select University</label>
                             <Dropdown
                                 placeholder="Select your university..."
                                 search
                                 selection
+
                                 options={universityOptions} width={16}
                                 onChange={(e, {value}) => this.getInputValue(e, value, 'university')}
                             />
@@ -137,6 +186,7 @@ class Signup extends React.Component {
 
                     <Form.Group>
                         <Form.Field width={5}>
+                            <label>Select Cohort</label>
                             <Dropdown
                                 placeholder="Select your cohort..."
                                 search
