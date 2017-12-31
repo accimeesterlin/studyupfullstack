@@ -2,7 +2,6 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import {Button, Icon} from 'semantic-ui-react';
 import {connect} from 'react-redux';
-import {locationsInStorage} from '../utils';
 import {get_user_profile, current_location, all_events} from '../action/actions';
 import '../scss/dashboard.scss';
 
@@ -22,13 +21,6 @@ class Dashboard extends React.Component {
 
 
     render() {
-
-        let events = [];
-        for (let key in this.props.events) {
-            events.push(this.props.events[key])
-        }
-        locationsInStorage(events);
-
 
         const {latitude, longitude} = this.props.current_location;
         const geocode = {latitude, longitude};

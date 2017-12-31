@@ -55,8 +55,6 @@ router.get('/geocode', (req, res) => {
     const address = req.param('address');
     const endpoint = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
     const key = '&key=AIzaSyCRKkfdFDQBX9qDs8sbu5BD62GweN2kMg0';
-
-
     rp({
         uri: endpoint + address + key,
         method: 'GET',
@@ -73,12 +71,10 @@ router.get('/geocode', (req, res) => {
 
 router.get("/users", verifyCookie, (req, res) => {
     const {userId} = req.user;
-    console.log(req.user);
     User.findOne({_id: userId})
         .select('-password')
         .populate('school event')
         .then((user) => {
-            console.log("User: ", user);
             res.status(200).json(user);
         })
         .catch((err) => {
@@ -97,7 +93,6 @@ router.post('/signup', (req, res) => {
         gender,
         cohort
     } = req.body;
-    console.log("Body: ", req.body);
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
 
@@ -165,7 +160,6 @@ router.post('/signin', (req, res) => {
 
 router.post('/schedule', verifyCookie, (req, res) => {
     const {place, sms, date, group, subject} = req.body;
-    console.log("Body: ", req.body);
 
     const add_event = new Event({
         place,

@@ -1,57 +1,74 @@
 import React from 'react'
-import {Grid} from 'semantic-ui-react';
-import {current_location, get_user_profile, geocode_marker, all_events} from '../action/actions';
-import {connect} from 'react-redux';
+import { Grid } from 'semantic-ui-react';
+import { current_location, get_user_profile, geocode_marker, all_events } from '../action/actions';
+import { connect } from 'react-redux';
+import axios from 'axios';
 import '../scss/map.scss';
 import university from '../images/university.png';
+import { locationsInStorage } from '../utils';
 
 
-const {latitude, longitude} = JSON.parse(localStorage.getItem('geocode'));
-
-
+const { latitude, longitude } = JSON.parse(localStorage.getItem('geocode'));
 let infowindow = new window.google.maps.InfoWindow();
 
 
 export class MapContainer extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
-        this.state = {zoom: 5};
+        this.state = { zoom: 5 }
     }
 
     componentWillMount() {
         this.props.dispatch(current_location());
         this.props.dispatch(get_user_profile());
         this.props.dispatch(all_events());
-        const locations = JSON.parse(localStorage.getItem('locations'));
-        locations.map((place) => {
-            this.props.dispatch(geocode_marker(place));
-        });
     }
 
     componentDidMount() {
-
         window.map = new window.google.maps.Map(document.getElementById('map'), {
-            center: {lat: latitude, lng: longitude},
+            center: { lat: latitude, lng: longitude },
             zoom: 10,
             mapTypeId: 'roadmap',
             zoomControl: true
         });
 
         window.map.addListener('zoom_changed', () => {
-            this.setState({
-                zoom: window.map.getZoom()
-            });
-        })
+            // this.setState({
+            //     zoom: window.map.getZoom()
+            // });
+        });
     }
 
+
+    componentWillReceiveProps(nextProps) {
+        let events = [];
+        for (let key in nextProps.events) {
+            events.push(nextProps.events[key])
+        }
+        this.setState({ events });
+
+        let locations = [];
+
+        this.state.events ? this.state.events.map((event) => {
+            axios.get('/api/geocode?address=' + event.place)
+                .then((response) => {
+                    const coordinate = response.data.results[0].geometry.location;
+                    locations.push(coordinate);
+                    this.setState({locations: locations});
+                })
+                .catch((err) => {
+                    console.log("Error: ", err);
+                });
+        }) : '';
+    }
+
+
     createMarker = (lat, lng) => {
-
-
         let marker = new window.google.maps.Marker({
             map: window.map,
-            position: {lat, lng},
+            position: { lat, lng },
             icon: university,
             title: 'Checking'
         });
@@ -61,17 +78,13 @@ export class MapContainer extends React.Component {
             infowindow.open(window.map, marker);
         });
 
-
     };
 
 
     render() {
-
-        this.props.geocode.map(({lat, lng}) => {
+        this.state.locations ? this.state.locations.map(({ lat, lng }) => {
             this.createMarker(lat, lng);
-        });
-
-
+        }) : '';
 
         return (
             <Grid className="map">
