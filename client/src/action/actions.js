@@ -40,6 +40,14 @@ export const schedule_event = (event) => {
     }
 };
 
+
+export const delete_event = (_id) => {
+    return{
+        type:"DELETE_EVENT",
+        payload: axios.post('/api/delete/event', {_id})
+    }
+};
+
 export const schedule_confirmation = (confirmation) => {
   return{
       type:'SCHEDULE_CONFIRMATION',

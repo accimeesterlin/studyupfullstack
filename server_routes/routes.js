@@ -16,7 +16,7 @@ const router = express.Router();
  * @param id
  * @returns {*}
  */
-const generateToken = ({username, id}) => {
+const generateToken = ({ username, id }) => {
     const token = jwt.sign({
         exp: Math.floor(Date.now() / 1000) + (60 * 60),
         data: {
@@ -37,7 +37,7 @@ const generateToken = ({username, id}) => {
  * @param next
  */
 const verifyCookie = (req, res, next) => {
-    const {token} = req.cookies;
+    const { token } = req.cookies;
 
     jwt.verify(token, 'studypsecret', (err, decoded) => {
         if (err) {
@@ -70,8 +70,8 @@ router.get('/geocode', (req, res) => {
 
 
 router.get("/users", verifyCookie, (req, res) => {
-    const {userId} = req.user;
-    User.findOne({_id: userId})
+    const { userId } = req.user;
+    User.findOne({ _id: userId })
         .select('-password')
         .populate('school event')
         .then((user) => {
@@ -103,9 +103,9 @@ router.post('/signup', (req, res) => {
 
     add_university.save((err) => {
         if (err) {
-            res.status(400).json({error: err})
+            res.status(400).json({ error: err })
         } else {
-            User.findOne({email})
+            User.findOne({ email })
                 .then((existed_user) => {
                     if (existed_user) {
                         res.status(404).json("User already exist");
@@ -139,9 +139,9 @@ router.post('/signup', (req, res) => {
 
 
 router.post('/signin', (req, res) => {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
     const cookies = req.cookies;
-    User.findOne({email})
+    User.findOne({ email })
         .then((user) => {
             if (!bcrypt.compareSync(password, user.password)) {
                 res.status(404).json('Password does not match');
@@ -159,7 +159,7 @@ router.post('/signin', (req, res) => {
 
 
 router.post('/schedule', verifyCookie, (req, res) => {
-    const {place, sms, date, group, subject} = req.body;
+    const { place, sms, date, group, subject } = req.body;
 
     const add_event = new Event({
         place,
@@ -171,29 +171,56 @@ router.post('/schedule', verifyCookie, (req, res) => {
 
     add_event.save((err) => {
         if (err) {
-            res.status(400).json({err});
+            res.status(400).json({ err });
         }
         else {
-            User.findOne({_id: req.user.userId})
+            User.findOne({ _id: req.user.userId })
                 .then((user) => {
                     user.event.push(add_event._id);
                     user.save((err) => {
                         if (err)
                             return err;
-                        res.json({msg: true});
+                        res.json({ msg: true });
                     });
                 })
                 .catch((err) => {
-                    res.status(400).json({err});
+                    res.status(400).json({ err });
                 });
         }
     });
 });
 
 
+router.post("/delete/event", verifyCookie, (req, res) => {
+    const { _id } = req.body;
+    console.log("ID: ", _id);
+
+
+    Event.remove({ _id })
+        .then((deleted) => {
+
+            User.findOne({ _id: req.user.userId })
+                .then((user) => {
+                    user.event.pull({ _id });
+                    user.save((err) => {
+                        if (err)
+                            console.log("Error occurs");
+                        res.json({ _id });
+                    });
+                })
+                .catch(() => {
+                    // TODO
+                });
+        })
+        .catch((err) => {
+            // TODO
+        });
+});
+
+
 // Dummy Test
 router.get('/check_schedules', (req, res) => {
-    User.findOne({email: 'accimeesterlin@yahoo.com'})
+    User.findOne({ email: 'accimeesterlin@yahoo.com' })
         .select('-password')
         .populate('event')
         .then((user) => {
